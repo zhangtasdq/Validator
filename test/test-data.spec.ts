@@ -46,6 +46,6 @@ let rule = {
             ]
         }
     ]
-}
+};
 
 export {rule};

@@ -3,6 +3,7 @@ import {spy} from "sinon";
 import "mocha";
 
 import Engine from "../src/impl/Engine";
+import ExecutorInterface from "../src/interface/ExecutorInterface";
 import {rule} from "./test-data.spec";
 
 describe("Validator Test", () => {
@@ -56,5 +57,78 @@ describe("Validator Test", () => {
             engine.run(ruleName, heightWomanShort, ()=>{}, heightWomanSpy);
             expect(heightWomanSpy.called).to.equal(true);
         });
+    });
+
+    describe("custom group operator", () => {
+        let notExistRule = {
+            notExistRule: [{}]
+        }
+
+        it("show throw error if group operator not exits", () => {
+            expect(() => {
+                engine.addRule("not exist group", notExistRule);
+            }).to.throw("组 notExistRule 不存在!");
+        });
+
+        describe("add custom operator", () => {
+            let twice = (children: ExecutorInterface[], target:Object, contextData: Object) => {
+                let result = {status: true},
+                    successCount = 0;
+
+                for(let i = 0, j = children.length; i < j; ++i) {
+                    result = children[i].execute(target, contextData);
+                    if (result.status) {
+                        successCount++;
+                    }
+                }
+                if (successCount === 2) {
+                    return {status: true};
+                }
+                return result;
+            };
+            let rule = {
+                twice: [{
+                    operator: "equal",
+                    key: "name",
+                    targetValue: "test"
+                }, {
+                    operator: "lessThan",
+                    key: "age",
+                    targetValue: 20
+                }, {
+                    operator: "equal",
+                    key: "gender",
+                    targetValue: "male"
+                }]
+            }
+
+            engine.addGroupExecutor("twice", twice);
+            engine.addRule("twice", rule);
+
+            it("should pass if data is valid", () => {
+                let fullMatchData = {name: "test", age: 18, gender: "male"},
+                    fullMatchSpy = spy(),
+                    twiceMatchData = {...fullMatchData, age: 33},
+                    twiceMatchSpy = spy();
+
+                engine.run("twice", fullMatchData, fullMatchSpy);
+                expect(fullMatchSpy.called).to.equal(true);
+                engine.run("twice", twiceMatchData, twiceMatchSpy);
+                expect(twiceMatchSpy.called).to.equal(true);
+            });
+
+            it("should error if data is invalid", () => {
+                let invalidData = {name: "not test", age: 18, gender: "woman"},
+                    invalidSpy = spy(),
+                    twiceInvalidData = {...invalidData, age: 12},
+                    twiceInvalidSpy = spy();
+
+                engine.run("twice", invalidData, ()=> {}, invalidSpy);
+                expect(invalidSpy.called).to.equal(true);
+                engine.run("twice", twiceInvalidData, () => {}, twiceInvalidSpy);
+                expect(twiceInvalidSpy.called).to.equal(true);
+            });
+        });
+
     });
 });

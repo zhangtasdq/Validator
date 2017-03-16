@@ -1,6 +1,7 @@
 import EngineInterface from "../interface/EngineInterface";
 import ExecutorInterface from "../interface/ExecutorInterface";
 import ExecutorFactory from "./ExecutorFactory";
+import ExecutorResult from "../interface/ExecutorResult";
 import Parser from "./Parser"
 import OperatorFactory from "./OperatorFactory";
 
@@ -36,6 +37,10 @@ class Engine implements EngineInterface {
         } else if(errorCallback){
             errorCallback(result);
         }
+    }
+
+    addGroupExecutor(key:string, executor: (children: ExecutorInterface[], target:Object, contextData:Object) => ExecutorResult) {
+        this.executorFactory.addGroupExecutor(key, executor);
     }
 }
 
