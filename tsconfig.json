@@ -1,3 +1,8 @@
 {
-    "compileOnSave": false
+    "compileOnSave": false,
+
+    "compileOptions": {
+        "lib": ["ES2017"]    
+    },
+    "lib": ["ES2017"]
 }

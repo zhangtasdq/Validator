@@ -1,12 +1,10 @@
 import ExecutorInterface from "../interface/ExecutorInterface";
 import ExecutorFactory from "./ExecutorFactory";
+import OperatorFactory from "./OperatorFactory";
 
 class Parse {
     private executorFactory: ExecutorFactory;
-
-    constructor(executorFactory: ExecutorFactory) {
-        this.executorFactory = executorFactory;
-    }
+    private operatorFactory: OperatorFactory;
 
     parse(rule:Object):ExecutorInterface {
         let result,
@@ -30,8 +28,17 @@ class Parse {
         return executor;
     }
 
-    parseSingle(rule:Object):ExecutorInterface {
-        return this.executorFactory.buildSingleExecutor(rule);
+    parseSingle(rule:any):ExecutorInterface {
+        let operator = this.operatorFactory.getOperator(rule.operator);
+        return this.executorFactory.buildSingleExecutor(rule, operator);
+    }
+
+    setExecutorFactory(executorFactory:ExecutorFactory):void {
+        this.executorFactory = executorFactory;
+    }
+
+    setOperatorFactory(operatorFactory:OperatorFactory):void {
+        this.operatorFactory = operatorFactory;
     }
 }
 
