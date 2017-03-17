@@ -1,5 +1,16 @@
 import ExecutorInterface from "../src/interface/ExecutorInterface";
 
+let contextDataRule = {
+    and: [
+        {
+            operator: "equal",
+            key: "isAdmin",
+            targetType: "contextData",
+            targetValue: "isAdmin"
+        }
+    ]
+}
+
 let baseRule = {
     and: [
         {
@@ -106,4 +117,4 @@ let matchRule = {
     }]
 };
 
-export {baseRule, notExistRule, twiceExecutor, twiceRule, notExistOperatorRule, matchOperator, matchRule};
+export {contextDataRule, baseRule, notExistRule, twiceExecutor, twiceRule, notExistOperatorRule, matchOperator, matchRule};

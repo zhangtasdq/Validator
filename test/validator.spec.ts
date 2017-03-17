@@ -3,16 +3,51 @@ import {spy} from "sinon";
 import "mocha";
 
 import Engine from "../src/impl/Engine";
-import ExecutorInterface from "../src/interface/ExecutorInterface";
-import {baseRule, notExistRule, twiceExecutor, twiceRule, notExistOperatorRule, matchOperator, matchRule} from "./test-data.spec";
+import {
+    contextDataRule,
+    baseRule,
+    notExistRule,
+    twiceExecutor,
+    twiceRule,
+    notExistOperatorRule,
+    matchOperator,
+    matchRule
+} from "./test-data.spec";
 
 describe("Validator Test", () => {
-    let engine = new Engine();
+    let contextData = {isAdmin: true},
+        engine = new Engine(contextData);
 
     it("should throw error if rule not exist", () => {
         expect(() => {
             engine.run("not exist rule", {}, () => {});
         }).to.throw("规则 not exist rule 不存在!");
+    });
+
+    describe("context data test", () => {
+        let ruleName = "context data rule";
+
+        engine.addRule(ruleName, contextDataRule);
+
+        it("should call success callback is data is match context data", () => {
+            let validData = {isAdmin: true, name: "tester"},
+                contextSpy = spy(),
+                failedSpy = spy();
+
+            engine.run(ruleName, validData, contextSpy, failedSpy);
+            expect(contextSpy.called).to.equal(true);
+            expect(failedSpy.notCalled).to.equal(true);
+        });
+
+        it("should call success callback is data is match context data", () => {
+            let inValidData = {isAdmin: false, name: "tester"},
+                successSpy = spy(),
+                inValidcontextSpy = spy();
+
+            engine.run(ruleName, inValidData, successSpy, inValidcontextSpy);
+            expect(successSpy.notCalled).to.equal(true);
+            expect(inValidcontextSpy.called).to.equal(true);
+        });
     });
 
     describe("base validate", () => {
