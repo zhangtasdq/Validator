@@ -42,6 +42,10 @@ class Engine implements EngineInterface {
     addGroupExecutor(key:string, executor: (children: ExecutorInterface[], target:Object, contextData:Object) => ExecutorResult) {
         this.executorFactory.addGroupExecutor(key, executor);
     }
+
+    addOperator(key:string, operator:(currentValue:any, targetValue:any) => boolean) {
+        this.operatorFactory.addOperator(key, operator);
+    }
 }
 
 export default Engine;

@@ -1,4 +1,6 @@
-let rule = {
+import ExecutorInterface from "../src/interface/ExecutorInterface";
+
+let baseRule = {
     and: [
         {
             operator: "greaterThan",
@@ -48,4 +50,60 @@ let rule = {
     ]
 };
 
-export {rule};
+let notExistRule = {
+    notExistRule: [{}]
+}
+
+let twiceExecutor = (children: ExecutorInterface[], target:Object, contextData: Object) => {
+    let result = {status: true},
+        successCount = 0;
+
+    for(let i = 0, j = children.length; i < j; ++i) {
+        result = children[i].execute(target, contextData);
+        if (result.status) {
+            successCount++;
+        }
+    }
+    if (successCount === 2) {
+        return {status: true};
+    }
+    return result;
+};
+
+let twiceRule = {
+    twice: [{
+        operator: "equal",
+        key: "name",
+        targetValue: "test"
+    }, {
+        operator: "lessThan",
+        key: "age",
+        targetValue: 20
+    }, {
+        operator: "equal",
+        key: "gender",
+        targetValue: "male"
+    }]
+}
+
+let notExistOperatorRule = {
+    and: [{
+        operator: "not_exist_operator",
+        key: "email",
+        targetValue: /^tester.*@gmail.com/
+    }]
+}
+
+let matchOperator = (currentValue:any, targetValue: any) => {
+    return targetValue.test(currentValue);
+};
+
+let matchRule = {
+    and: [{
+        operator: "match",
+        key: "email",
+        targetValue: /^tester.*@gmail.com/
+    }]
+};
+
+export {baseRule, notExistRule, twiceExecutor, twiceRule, notExistOperatorRule, matchOperator, matchRule};

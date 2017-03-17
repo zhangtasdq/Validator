@@ -4,23 +4,21 @@ import "mocha";
 
 import Engine from "../src/impl/Engine";
 import ExecutorInterface from "../src/interface/ExecutorInterface";
-import {rule} from "./test-data.spec";
+import {baseRule, notExistRule, twiceExecutor, twiceRule, notExistOperatorRule, matchOperator, matchRule} from "./test-data.spec";
 
 describe("Validator Test", () => {
     let engine = new Engine();
 
     it("should throw error if rule not exist", () => {
         expect(() => {
-            engine.run("not exist rule", {}, () => {
-
-            });
+            engine.run("not exist rule", {}, () => {});
         }).to.throw("规则 not exist rule 不存在!");
     });
 
     describe("base validate", () => {
         let ruleName = "base validate";
 
-        engine.addRule(ruleName, rule);
+        engine.addRule(ruleName, baseRule);
 
         it("should call success callback if data is valid", () => {
             let maleData = {age: 25, gender: "male", height: 1.71},
@@ -59,51 +57,16 @@ describe("Validator Test", () => {
         });
     });
 
-    describe("custom group operator", () => {
-        let notExistRule = {
-            notExistRule: [{}]
-        }
-
-        it("show throw error if group operator not exits", () => {
+    describe("custom group executor", () => {
+        it("show throw error if group executor not exits", () => {
             expect(() => {
                 engine.addRule("not exist group", notExistRule);
             }).to.throw("组 notExistRule 不存在!");
         });
 
-        describe("add custom operator", () => {
-            let twice = (children: ExecutorInterface[], target:Object, contextData: Object) => {
-                let result = {status: true},
-                    successCount = 0;
-
-                for(let i = 0, j = children.length; i < j; ++i) {
-                    result = children[i].execute(target, contextData);
-                    if (result.status) {
-                        successCount++;
-                    }
-                }
-                if (successCount === 2) {
-                    return {status: true};
-                }
-                return result;
-            };
-            let rule = {
-                twice: [{
-                    operator: "equal",
-                    key: "name",
-                    targetValue: "test"
-                }, {
-                    operator: "lessThan",
-                    key: "age",
-                    targetValue: 20
-                }, {
-                    operator: "equal",
-                    key: "gender",
-                    targetValue: "male"
-                }]
-            }
-
-            engine.addGroupExecutor("twice", twice);
-            engine.addRule("twice", rule);
+        describe("add custom executor", () => {
+            engine.addGroupExecutor("twice", twiceExecutor);
+            engine.addRule("twice", twiceRule);
 
             it("should pass if data is valid", () => {
                 let fullMatchData = {name: "test", age: 18, gender: "male"},
@@ -130,5 +93,36 @@ describe("Validator Test", () => {
             });
         });
 
+    });
+
+    describe("custom operator", () => {
+        it("show throw error if operator not exits", () => {
+            expect(() => {
+                engine.addRule("not exist group", notExistOperatorRule);
+            }).to.throw("操作 not_exist_operator 不存在!");
+        });
+
+        describe("add custom executor", () => {
+            let ruleName = "test match";
+
+            engine.addOperator("match", matchOperator);
+            engine.addRule(ruleName, matchRule);
+
+            it("should pass if data is valid", () => {
+                let validData = {name: "test", age: 18, gender: "male", email: "tester-hello@gmail.com"},
+                    validDataSpy = spy();
+
+                engine.run(ruleName, validData, validDataSpy);
+                expect(validDataSpy.called).to.equal(true);
+            });
+
+            it("should error if data is invalid", () => {
+                let invalidData = {name: "not test", age: 18, gender: "woman", email: "invaild-email@gmail.com"},
+                    invalidSpy = spy();
+
+                engine.run(ruleName, invalidData, ()=> {}, invalidSpy);
+                expect(invalidSpy.called).to.equal(true);
+            });
+        });
     });
 });
