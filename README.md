@@ -8,7 +8,7 @@ Demo
 
 Example
 ---
-###Basic Example
+### Basic Example
 ```js
 import Engine from "../src/impl/Engine";
 
@@ -74,7 +74,7 @@ engine.run(ruleName, maleData, () => {
 });
 ```
 
-###Custom Operation
+### Custom Operation
 ```js
 import Engine from "../src/impl/Engine";
 
@@ -104,7 +104,7 @@ engine.run(ruleName, validData, () => {
 
 ```
 
-###Custom Group Operation
+### Custom Group Operation
 ```js
 import Engine from "../src/impl/Engine";
 
