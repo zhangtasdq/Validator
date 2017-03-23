@@ -1,6 +1,6 @@
 validator
 ===
->used to test data is match rule, can custom operation
+>Used to test whether the data conforms to the rules, and can custom operation
 
 Demo
 ---
