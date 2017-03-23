@@ -104,13 +104,9 @@ describe("Validator Test", () => {
             engine.addRule("twice", twiceRule);
 
             it("should pass if data is valid", () => {
-                let fullMatchData = {name: "test", age: 18, gender: "male"},
-                    fullMatchSpy = spy(),
-                    twiceMatchData = {...fullMatchData, age: 33},
+                let twiceMatchData = {name: "test", age: 48, gender: "male"},
                     twiceMatchSpy = spy();
 
-                engine.run("twice", fullMatchData, fullMatchSpy);
-                expect(fullMatchSpy.called).to.equal(true);
                 engine.run("twice", twiceMatchData, twiceMatchSpy);
                 expect(twiceMatchSpy.called).to.equal(true);
             });
@@ -119,12 +115,16 @@ describe("Validator Test", () => {
                 let invalidData = {name: "not test", age: 18, gender: "woman"},
                     invalidSpy = spy(),
                     twiceInvalidData = {...invalidData, age: 12},
-                    twiceInvalidSpy = spy();
+                    twiceInvalidSpy = spy(),
+                    fullMatchData = {name: "test", age: 18, gender: "male"},
+                    fullMatchSpy = spy();
 
                 engine.run("twice", invalidData, ()=> {}, invalidSpy);
                 expect(invalidSpy.called).to.equal(true);
                 engine.run("twice", twiceInvalidData, () => {}, twiceInvalidSpy);
                 expect(twiceInvalidSpy.called).to.equal(true);
+                engine.run("twice", fullMatchData, ()=> {}, fullMatchSpy);
+                expect(fullMatchSpy.called).to.equal(true);
             });
         });
 

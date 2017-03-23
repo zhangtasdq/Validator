@@ -78,7 +78,7 @@ let twiceExecutor = (children: ExecutorInterface[], target:Object, contextData: 
     if (successCount === 2) {
         return {status: true};
     }
-    return result;
+    return {status: false};
 };
 
 let twiceRule = {
