@@ -63,7 +63,8 @@ let baseRule = {
 };
 
 let ruleName = "base validate",
-    maleData = {age: 25, gender: "male", height: 1.71};
+    maleData = {age: 25, gender: "male", height: 1.71},
+    engine = new Engine();
 
 engine.addRule(ruleName, baseRule);
 engine.run(ruleName, maleData, () => {
@@ -89,7 +90,8 @@ let matchRule = {
     }]
 };
 let ruleName = "test match",
-    validData = {name: "test", age: 18, gender: "male", email: "tester-hello@gmail.com"};
+    validData = {name: "test", age: 18, gender: "male", email: "tester-hello@gmail.com"},
+    engine = new Engine();
 
 engine.addOperator("match", matchOperator);
 engine.addRule(ruleName, matchRule);
@@ -137,7 +139,8 @@ let twiceRule = {
         targetValue: "male"
     }]
 };
-let twiceMatchData = {name: "test", age: 48, gender: "male"};
+let twiceMatchData = {name: "test", age: 48, gender: "male"},
+    engine = new Engine();
 
 engine.addGroupExecutor("twice", twiceExecutor);
 engine.addRule("twice", twiceRule);
