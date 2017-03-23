@@ -8,7 +8,7 @@ validator
 
 使用
 ---
-###基本使用
+### 基本使用
 ```js
 import Engine from "../src/impl/Engine";
 
@@ -74,7 +74,7 @@ engine.run(ruleName, maleData, () => {
 });
 ```
 
-###自定义比较符
+### 自定义比较符
 ```js
 import Engine from "../src/impl/Engine";
 
@@ -104,7 +104,7 @@ engine.run(ruleName, validData, () => {
 
 ```
 
-###自定义组运算符
+### 自定义组运算符
 ```js
 import Engine from "../src/impl/Engine";
 
