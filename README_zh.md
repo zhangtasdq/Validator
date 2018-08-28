@@ -155,7 +155,7 @@ engine.run(ruleName, twiceMatchData, () => {
 构建
 ---
 ```shell
-grunt
+npm run build
 ```
 
 测试

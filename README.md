@@ -154,7 +154,7 @@ engine.run(ruleName, twiceMatchData, () => {
 Build
 ---
 ```shell
-grunt
+npm run build
 ```
 
 Test

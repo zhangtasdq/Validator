@@ -47,7 +47,7 @@ class OperatorFactory {
         this.addOperator("contains", contains);
     }
 
-    addOperator(name:string, callback:(currentValu:any, targetValue:any) => boolean):void {
+    addOperator(name:string, callback:(currentValue: any, targetValue: any) => boolean):void {
         this.operators[name] = new Operator(name, callback);
     }
 
