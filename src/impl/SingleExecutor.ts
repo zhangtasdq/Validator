@@ -33,7 +33,7 @@ class SingleExecutor implements ExecutorInterface {
             }
         }
 
-        if (j === pathArray.length) {
+        if (i === pathArray.length) {
             return tempTarget;
         }
         return null;
