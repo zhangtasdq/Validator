@@ -1,6 +1,6 @@
 {
   "name": "js-rule-validator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Used to test whether the data conforms to the rules, and can custom operation",
   "main": "./validator.min.js",
   "scripts": {},
